@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <input type="text" rule="max:12,min:6"/>
+        <input type="text" rule="isNumber,max:3"/>
+    </div>
+    <div>
+        <input type="text" v-model="title"/>
+        <span type="text" v-model="title"></span>
+        <h4 v-bind="title">长度：0</h4>
+    </div>
+    <script src="../principle/双向数据绑定工厂.js"></script>
+</body>
+</html>
