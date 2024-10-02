@@ -63,7 +63,6 @@ class Promise1{
                     callback.onFulfilled(value);
                 });
             });
-
         }
     }
 
@@ -204,14 +203,6 @@ class Promise1{
                 resolve(value);
             });
         }
-        // return new Promise1((resolve, reject) => {
-        //     if(value instanceof Promise1){
-        //         value.then(resolve, reject);
-        //     }
-        //     else{
-        //         resolve(value);
-        //     }
-        // });
     }
 
     /**
@@ -227,6 +218,30 @@ class Promise1{
     }
 
     /**
+    * @description 静态方法allSettled
+    * @param {Array} promises promise数组
+    * @return void
+    * @status public
+    */
+    static allSettled(promises){
+        // 返回一个新的promise
+        // 当所有promise都解决时，新promise才解决
+        // 无论是否拒绝，都返回一个对象
+        return new Promise1((resolve, reject) => {
+            let results = [];
+            const compoletFunc = (value) => {
+                results.push(value);
+                if(results.length === promises.length){
+                    resolve(results);
+                }
+            };
+            promises.forEach((promise) => {
+                promise.then(compoletFunc,compoletFunc);
+            })
+        })
+    }
+
+    /**
     * @description 静态方法all
     * @param {Array} promises promise数组
     * @return void
@@ -239,7 +254,7 @@ class Promise1{
         return new Promise1((resolve, reject) => {
             let results = [];
             promises.forEach((promise) => {
-                Promise1.resolve(promise).then((value) => {
+                promise.then((value) => {
                     results.push(value);
                     if(results.length === promises.length){
                         resolve(results);
@@ -262,13 +277,19 @@ class Promise1{
         // 遍历所有promise，只要有一个promise解决或拒绝，新promise就解决或拒绝
         return new Promise1((resolve, reject) => {
             promises.forEach((promise) => {
-                promise.then((value) => {
-                    resolve(value);
-                }, (reason) => {
-                    reject(reason);
-                });
+                promise.then(resolve, reject);
             });
         });
+    }
+
+    /**
+    * @description 静态方法catch
+    * @param {Function} onRejected 拒绝回调
+    * @return void
+    * @status public
+    */
+    static catch(onRejected){
+        return this.then(null, onRejected);
     }
 }
 
@@ -306,3 +327,20 @@ Promise1.reject(new Promise1((resolve, reject) => {
 // }, (reason) => {
 //     console.log(reason);
 // });
+
+function promiseFunc(res)
+{
+    return new Promise1((resolve, reject) => {
+        if(res.includes("失败"))
+        {
+            reject(res);
+        }
+        resolve(res);
+    });
+}
+let promiseArr = [promiseFunc("成功1"), promiseFunc("成功2"), promiseFunc("失败"), promiseFunc("成功3")];
+// Promise.allSettled方法
+// 返回所有promise的结果，不管成功还是失败
+Promise1.allSettled(promiseArr).then((res) => {
+    console.log(res);
+});
