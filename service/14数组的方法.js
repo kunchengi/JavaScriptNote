@@ -1,3 +1,14 @@
+/**
+ * for和foreach
+ * 使用场景：
+ * for适用于已知循环次数的情况，可以灵活控制循环的起始、结束和步长。
+ * foreach适用于需要数组依次遍历的情况。
+ * 性能：
+ * for循环性能更好，因为for循环不需要创建新的函数，for循环可以提前退出，而forEach需要创建新的函数，forEach无法提前退出。
+ * 循环控制：
+ * for可以用break跳出循环，用continue跳过当前循环。
+ * foreach循环不能提前退出。但可以在回调函数中使用return跳过当前循环。类似continue。
+ */
 // 是否是数组类型
 console.log(Array.isArray([])); // true
 console.log(Array.isArray({})); // false

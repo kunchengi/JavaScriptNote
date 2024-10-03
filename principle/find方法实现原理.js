@@ -11,16 +11,20 @@ function find(arr, callback)
     {
         throw new Error("参数类型错误");
     }
-    for(let item of arr)
+    // 遍历数组
+    for(let i=0;i < arr.length;i++)
     {
-        if(callback(item))
+        let item = arr[i];
+        // 如果回调函数返回true，则返回当前元素
+        if(callback(arr[i], i, arr))
         {
             return item;
         }
     }
+    // 如果没有找到，则返回undefined
     return undefined;
 }
 
 let arr = [1,2,3];
-console.log(find(arr, item => item > 1)); // 2
-console.log(find(arr, item => item > 3)); // undefined
+console.log(find(arr, (item, index, arr) => item > 1)); // 2
+console.log(find(arr, (item, index, arr) => item > 3)); // undefined
