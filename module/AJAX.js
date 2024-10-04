@@ -8,30 +8,27 @@ export default class AJAX {
     * @status public
     */
     static createXhr(url, options, method) {
+        // 转换为大写
+        method = method.toUpperCase();
         const xhr = new XMLHttpRequest();
         // 如果options不为空
-        if (!!options) {
-            // 获取params参数的key
-            // let paramsKeys = Object.keys(options.params);
+        if (options) {
+            // 初始化前缀
             let paramsStr = url.includes("?") ? "&" : "?";
             // 将options.params对象转换成?id=100&vip=7&
             for (let key in options.params) {
-                paramsStr += key + "=" + options.params[key] + "&";
+                paramsStr += `${key}=${params[key]}&`;
             }
             // 删除最后一个字符&
             paramsStr = paramsStr.slice(0, -1);
-            //初始化
-            xhr.open(method, url + paramsStr);
-            
+            url += paramsStr;
             // 设置请求头
             for (let key in options.headers) {
                 xhr.setRequestHeader(key, options.headers[key]);
             }
-        } else {
-            //初始化
-            xhr.open(method, url);
         }
-        
+        xhr.open(method, url);
+        xhr.responseType = "json";
         return xhr;
     }
 
@@ -61,9 +58,8 @@ export default class AJAX {
                     //判断响应状态码
                     //200-300表示成功
                     if (xhr.status >= 200 && xhr.status <= 300) {
-                        const res = JSON.parse(xhr.response);
                         //如果成功
-                        resolve(res);
+                        resolve(xhr.response);
                     } else {//如果失败
                         reject(xhr.status);
                     }
@@ -87,7 +83,7 @@ export default class AJAX {
             // 设置open和setRequestHeader
             const xhr = this.createXhr(url, options, "POST");
             //发送
-            xhr.send(body);
+            xhr.send(JSON.stringify(body));
             //绑定事件,处理响应结果
             xhr.onreadystatechange = function () {
                 //判断
@@ -96,7 +92,11 @@ export default class AJAX {
                     //200-300表示成功
                     if (xhr.status >= 200 && xhr.status <= 300) {
                         //如果成功
-                        resolve(xhr.response);
+                        resolve({
+                            status: xhr.status,
+                            message: xhr.statusText,
+                            body: xhr.response
+                        });
                     } else {//如果失败
                         reject(xhr.status);
                     }
