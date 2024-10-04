@@ -29,7 +29,7 @@
         }
     }
 
-    // 事件委托解决
+    // 事件委托解决，将事件绑定在父元素上
     let container = document.getElementsByClassName("container")[3];
     container.onclick = function (e) {
         let target = e.target;
