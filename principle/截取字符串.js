@@ -5,8 +5,8 @@
  * @return void
  * @status public
  */
-function truncate(str, num) {
+export function truncate(str, num) {
     return str.slice(0, num) + '...';
 }
 
-console.log(truncate('这是javaScript总结', 5));// 这是jav...
+// console.log(truncate('这是javaScript总结', 5));// 这是jav...

@@ -5,7 +5,7 @@
  * @return void
  * @status public
  */
-function newInstance(Fn, ...args) {
+export function newInstance(Fn, ...args) {
     // 创建一个新对象
     // 修改函数内部的this指向，并执行
     // 修改原型
@@ -17,10 +17,10 @@ function newInstance(Fn, ...args) {
     return result instanceof Object ? result : obj;
 }
 
-function Person(name, age) {
-    this.name = name;
-    this.age = age;
-}
+// function Person(name, age) {
+//     this.name = name;
+//     this.age = age;
+// }
 
-const p1 = newInstance(Person, "Kenson", 18);
-console.log(p1);
+// const p1 = newInstance(Person, "Kenson", 18);
+// console.log(p1);

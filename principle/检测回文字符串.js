@@ -1,4 +1,4 @@
-function palindrome(str) {
+export function palindrome(str) {
     // 思路1：翻转字符串，判断是否相等
     // return str.split('').reverse().join('') === str;
 
@@ -17,5 +17,5 @@ function palindrome(str) {
     return true;
 }
 
-console.log(palindrome("abcba"));// true
-console.log(palindrome("abcdba"));// false
+// console.log(palindrome("abcba"));// true
+// console.log(palindrome("abcdba"));// false

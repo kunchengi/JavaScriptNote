@@ -23,7 +23,7 @@
  * @return void
  * @status public
  */
-function axios({ method, url, params, headers, body}) {
+export function axios({ method, url, params, headers, body}) {
     // 转换成大写
     method = method.toUpperCase();
     return new Promise((resolve, reject) => {
@@ -104,9 +104,9 @@ axios.request = function (method, url, options) {
     return axios({
         method: method,
         url: url,
-        params: options.params,
-        headers: options.headers,
-        body: options.body
+        params: options?.params,
+        headers: options?.headers,
+        body: options?.body
     });
 }
 
@@ -139,18 +139,18 @@ axios.delete = function (url, options) {
     return axios.request("DELETE", url, options)
 }
 
-axios({
-    method: 'GET',
-    url: 'https://restapi.amap.com/v3/weather/weatherInfo',
-    params: {
-        key: '767311c5893e14831b1ac4e5dec435b7',
-        city: '440106',
-    }
-}).then(res => {
-    console.log(res);
-},(err) => {
-    console.log(err);
-})
+// axios({
+//     method: 'GET',
+//     url: 'https://restapi.amap.com/v3/weather/weatherInfo',
+//     params: {
+//         key: '767311c5893e14831b1ac4e5dec435b7',
+//         city: '440106',
+//     }
+// }).then(res => {
+//     console.log(res);
+// },(err) => {
+//     console.log(err);
+// })
 
 // axios({
 //     // 请求方法
@@ -174,29 +174,29 @@ axios({
 // })
 
 
-let options = {
-    params: {
-        key: "767311c5893e14831b1ac4e5dec435b7",
-        city: "440105"
-    },
-    headers: {
-        "Content-Type": "application/json"
-    }
-};
+// let options = {
+//     params: {
+//         key: "767311c5893e14831b1ac4e5dec435b7",
+//         city: "440105"
+//     },
+//     headers: {
+//         "Content-Type": "application/json"
+//     }
+// };
 
-axios.get('https://restapi.amap.com/v3/weather/weatherInfo',options).then(res => {
-    console.log("GET");
-    console.log(res);
-},(err) => {
-    console.log(err);
-})
+// axios.get('https://restapi.amap.com/v3/weather/weatherInfo',options).then(res => {
+//     console.log("GET");
+//     console.log(res);
+// },(err) => {
+//     console.log(err);
+// })
 
-axios.post('https://restapi.amap.com/v3/weather/weatherInfo',options).then(res => {
-    console.log("POST");
-    console.log(res);
-},(err) => {
-    console.log(err);
-})
+// axios.post('https://restapi.amap.com/v3/weather/weatherInfo',options).then(res => {
+//     console.log("POST");
+//     console.log(res);
+// },(err) => {
+//     console.log(err);
+// })
 
 // axios.put('http://127.0.0.1').then(res => {
 //     console.log(res);

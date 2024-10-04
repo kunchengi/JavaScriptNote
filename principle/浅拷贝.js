@@ -4,7 +4,7 @@
  * @return void
  * @status public
  */
-function clone(obj) {
+export function clone(obj) {
     if(!obj || typeof obj !== "object")
     {
         return obj;
@@ -43,31 +43,31 @@ function clone2(obj) {
     return cloneObj;
 }
 
-const obj = {
-    name: 'zhangsan',
-    age: 18,
-    address: {
-        city: 'beijing',
-        street: 'changan'
-    }
-}
-const objClone = clone(obj);
-// 修改一级属性，不会影响原对象
-objClone.name = 'lisi';
-console.log(objClone.name);
-console.log(obj.name);
-// 修改二级属性，会影响原对象
-objClone.address.city = 'shanghai';
-console.log(objClone.address.city);
-console.log(obj.address.city);
+// const obj = {
+//     name: 'zhangsan',
+//     age: 18,
+//     address: {
+//         city: 'beijing',
+//         street: 'changan'
+//     }
+// }
+// const objClone = clone(obj);
+// // 修改一级属性，不会影响原对象
+// objClone.name = 'lisi';
+// console.log(objClone.name);
+// console.log(obj.name);
+// // 修改二级属性，会影响原对象
+// objClone.address.city = 'shanghai';
+// console.log(objClone.address.city);
+// console.log(obj.address.city);
 
-const arr = [1,2,3,[4,5,6]];
-const arrClone = clone(arr);
-// 修改一级属性，不会影响原对象
-arrClone[1] = 99;
-console.log(arrClone[1]);
-console.log(arr[1]);
-// 修改二级属性，会影响原对象
-arrClone[3][1] = 999;
-console.log(arrClone[3][1]);
-console.log(arr[3][1]);
+// const arr = [1,2,3,[4,5,6]];
+// const arrClone = clone(arr);
+// // 修改一级属性，不会影响原对象
+// arrClone[1] = 99;
+// console.log(arrClone[1]);
+// console.log(arr[1]);
+// // 修改二级属性，会影响原对象
+// arrClone[3][1] = 999;
+// console.log(arrClone[3][1]);
+// console.log(arr[3][1]);

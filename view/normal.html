@@ -18,6 +18,14 @@
     <script src="../module/moment.js"></script>
     <!-- <script src="../service/34异步编程.js"></script> -->
     <!-- <script src="../service/34异步编程.js" type="module"></script> -->
-    <script src="../principle/Axios.js"></script>
+    <script src="../dist/Kenson-utils.js"></script>
+    <script>
+        console.log(kutils);
+        kutils.axios.get('https://restapi.amap.com/v3/weather/weatherInfo?key=767311c5893e14831b1ac4e5dec435b7&city=440106').then(res => {
+            console.log(res);
+        }).catch(err => {
+            console.log(err);
+        })
+    </script>
 </body>
 </html>

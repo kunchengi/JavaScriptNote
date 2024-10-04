@@ -20,7 +20,7 @@
  * @return void
  * @status public
  */
-function throttle(callback, wait)
+export function throttle(callback, wait)
 {
     // 定义开始时间
     let startTime = 0;
@@ -42,9 +42,9 @@ function throttle(callback, wait)
 //     console.log(Date.now());
 // });
 // 绑定滚动事件(使用节流)
-window.addEventListener('scroll', throttle(function (e) {
-    console.log(e);
-}, 500));
+// window.addEventListener('scroll', throttle(function (e) {
+//     console.log(e);
+// }, 500));
 
 /**
  * @description 函数防抖
@@ -52,7 +52,7 @@ window.addEventListener('scroll', throttle(function (e) {
  * @return void
  * @status public
  */
-function debounce(callback, wait) {
+export function debounce(callback, wait) {
     // 缓存一个定时器id
     let timer = null;
     // 返回结果是一个函数，参数是事件对象
@@ -68,12 +68,12 @@ function debounce(callback, wait) {
     }
 }
 
-const input = document.querySelector('input');
-// 未使用防抖
-// input.onkeydown = function (e) {
+// const input = document.querySelector('input');
+// // 未使用防抖
+// // input.onkeydown = function (e) {
+// //     console.log(e.keyCode);
+// // };
+// // 使用防抖
+// input.onkeydown = debounce(function (e) {
 //     console.log(e.keyCode);
-// };
-// 使用防抖
-input.onkeydown = debounce(function (e) {
-    console.log(e.keyCode);
-}, 500);
+// }, 500);
