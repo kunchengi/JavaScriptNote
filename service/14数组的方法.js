@@ -8,6 +8,8 @@
  * 循环控制：
  * for可以用break跳出循环，用continue跳过当前循环。
  * foreach循环不能提前退出。但可以在回调函数中使用return跳过当前循环。类似continue。
+ * 
+ * for in循环的性能较差
  */
 // 是否是数组类型
 console.log(Array.isArray([])); // true

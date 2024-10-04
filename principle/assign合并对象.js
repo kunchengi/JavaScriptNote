@@ -8,7 +8,10 @@ function assign(target, ...sourceArr) {
     for(var source of sourceArr)
     {
         for (var key in source) {
-            target[key] = source[key];
+            if(source.hasOwnProperty(key))
+            {
+                target[key] = source[key];
+            }
         }
     }
     return target;
