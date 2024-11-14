@@ -19,11 +19,11 @@
  * @param url 请求地址
  * @param params 请求参数
  * @param headers 请求头
- * @param body 请求体
+ * @param data 请求体
  * @return void
  * @status public
  */
-export function axios({ method, url, params, headers, body}) {
+export function axios({ method, url, params, headers, data}) {
     // 转换成大写
     method = method.toUpperCase();
     return new Promise((resolve, reject) => {
@@ -50,13 +50,13 @@ export function axios({ method, url, params, headers, body}) {
         {
             // 设置请求头
             for (let key in headers) {
-                xhr.setRequestHeader(key, options.headers[key]);
+                xhr.setRequestHeader(key, headers[key]);
             }
         }
         if(axios.isNeedBody(method))
         {
             // 设置请求体
-            xhr.send(JSON.stringify(body));
+            xhr.send(JSON.stringify(data));
         }
         else {
             xhr.send();
@@ -106,7 +106,7 @@ axios.request = function (method, url, options) {
         url: url,
         params: options?.params,
         headers: options?.headers,
-        body: options?.body
+        data: options?.data
     });
 }
 

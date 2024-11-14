@@ -1,0 +1,49 @@
+{
+  "posts": [
+    {
+      "title": "法外狂徒",
+      "author": "张三",
+      "id": "1"
+    },
+    {
+      "id": "2",
+      "title": "json-server2",
+      "author": "typicode"
+    },
+    {
+      "id": "85e5",
+      "title": "随便写点东西",
+      "author": "typicode"
+    },
+    {
+      "id": "01a3",
+      "title": "从前有座山",
+      "author": "和尚"
+    },
+    {
+      "id": "30b6",
+      "title": "山上有座庙",
+      "author": "小和尚"
+    },
+    {
+      "id": "efb7",
+      "title": "2024/11/01",
+      "author": "ckc"
+    }
+  ],
+  "comments": [
+    {
+      "id": "1",
+      "body": "some comment",
+      "postId": 1
+    },
+    {
+      "id": "2",
+      "body": "some comment2",
+      "postId": 2
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}

@@ -1,3 +1,19 @@
+/**
+ * 思路：
+ * 1. 构造函数传入执行器回调函数，传入解决函数和拒绝函数并执行
+ * 2. 实现解决函数和拒绝函数，能够修改状态，并设置原因
+ * 3. 状态的修改不可逆
+ * 4. 实现then方法，传入成功回调和失败回调，如果状态为成功则执行成功回调，状态为失败则执行失败的回调
+ * 5. 实现then方法没传参的情况
+ *      - 当then方法的第一个回调不是函数，则设置默认值为()=>this.value
+ *      - 当then方法第二个回调不是函数，则设置默认值为()=> {throw this.value}
+ * 6. 实现执行器里面异步执行解决/拒绝函数和多次调用then方法的情况
+ *      - 当状态为进行中，则将解决/拒绝函数添加到数组中
+ *      - 解决函数和拒绝函数遍历数组并执行
+ * 7. 
+ *      
+ */
+
 class Promise1{
     /**
     * @description 进行中状态
@@ -21,18 +37,33 @@ class Promise1{
     static REJECTED = 'rejected';
 
     /**
+    * @description 状态
+    * @defaultValue pending
+    * @status public
+    */
+    PromiseState = Promise1.PENDING;
+
+    /**
+    * @description 原因
+    * @defaultValue undefined
+    * @status public
+    */
+    PromiseResult = undefined;
+
+    /**
+    * @description then回调函数数组，私有属性，[{onFulfilled, onRejected}]
+    * @defaultValue [];
+    * @status public
+    */
+    #callbacks = [];
+
+    /**
     * @description 构造函数
     * @param {Function} executor 执行者回调函数
     * @return void
     * @status public
     */
     constructor(executor){
-        // 初始化状态为pending
-        this.PromiseState = Promise1.PENDING;
-        // 初始化值为undefined
-        this.PromiseResult = undefined;
-        // 初始化then回调函数数组
-        this.callbacks = [];
         try{
             // 执行回调函数，修改this指向当前实例
             executor(this.resolve.bind(this), this.reject.bind(this));
@@ -56,10 +87,10 @@ class Promise1{
             this.PromiseState = Promise1.FULFILLED;
             this.PromiseResult = value;
             // 使用setTimeout将回调函数放入下一个宏任务中执行
-            // 避免阻塞同步代码的执行，实现异步效果
+            // 避免阻塞then后面的同步代码的执行，实现异步效果
             setTimeout(() => {
                 // 遍历回调函数数组，执行所有解决回调
-                this.callbacks.forEach((callback) => {
+                this.#callbacks.forEach((callback) => {
                     callback.onFulfilled(value);
                 });
             });
@@ -86,7 +117,7 @@ class Promise1{
         // 避免阻塞同步代码的执行，实现异步效果
         setTimeout(() => {
             // 遍历回调函数数组，执行所有拒绝回调
-            this.callbacks.forEach((callback) => {
+            this.#callbacks.forEach((callback) => {
                 callback.onRejected(reason);
             }); 
         });
@@ -115,7 +146,7 @@ class Promise1{
             // 解决执行then方法时状态还未改变的问题
             if(this.PromiseState === Promise1.PENDING){
                 // 如果状态为进行中，则将回调函数保存到数组中
-                this.callbacks.push({
+                this.#callbacks.push({
                     onFulfilled: value => {
                         try{
                             this.parse(promise, onFulfilled(value), resolve, reject);

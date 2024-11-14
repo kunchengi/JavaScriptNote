@@ -2,7 +2,59 @@
  * 定义：当前对象的引用
  * 普通函数的this指向和函数在哪里定义无关，和如何调用有关，谁调用指向谁
  * 箭头函数的this来源于上级作用域，往外找对象，找不到指向window
+ * this在全局环境时，指向全局对象（非严格模式、严格模式）
+ * this在函数内部时：
+ *  1. 直接调用函数，
+ *      1. 非严格模式：this指向全局对象（window）
+ *      2. 严格模式：this指向undefined
+ *  2. 使用对象.的方式调用函数
+ *      1. 谁调用，指向谁
+ * 修改this指向并执行函数：
+ *  1. call
+ *      1. 第一个参数为this的指向，指向第一个参数
+ *      2. 后面接参数，参数会依次传入
+ *  2. apply
+ *      1. 第一个参数为this的指向，指向第一个参数
+ *      2. 后面接数组，数组会展开，依次传入
+ * 修改this指向并返回新函数（不执行）：
+ *  1. bind
+ *      1. 第一个参数为this的指向，指向第一个参数
+ *      3. 后面接参数，参数会依次传入
  */
+console.log("this在全局环境时，指向全局对象（非严格模式、严格模式）");
+console.log(this);// window
+// "use strict"
+// console.log(this);// window
+console.log("this在函数内部时");
+console.log("直接调用函数，非严格模式的this指向window，严格模式的this指向undefined");
+function fun() {
+    console.log(this);
+}
+fun();// window
+
+function fun1(){
+    "use strict"
+    console.log(this);
+}
+fun1();// undefined
+console.log("使用对象.的方式调用函数，指向调用者");
+let food = {
+    name: '猪脚饭',
+    eat() {
+        console.log(this);
+    }
+}
+food.eat();// food
+let food1 = {
+    name: '猪脚饭1',
+    eat() {
+        "use strict"
+        console.log(this);
+    }
+}
+food1.eat();// food
+
+console.log("其他测试");
 function foo(a,b,...args) {
     console.log(this);
     console.log(a,b);
@@ -82,4 +134,3 @@ let Student = {
     }
 }
 Student.init();
-

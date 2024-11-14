@@ -6,7 +6,7 @@
  * @return void
  * @status public
  */
-function call(fn, obj, ...args)
+Function.prototype.myCall = function(obj, ...args)
 {
     // 如果obj为null,undefined,则默认为全局对象
     if(!obj)
@@ -15,15 +15,16 @@ function call(fn, obj, ...args)
         obj = globalThis;
     }
     // 为obj添加fn方法
-    obj.temp = fn;
-    // 调用obj.temp方法,fn里的this指向obj
-    let result = obj.temp(...args);
-    // 删除obj.temp方法
-    delete obj.temp;
+    // 使用symbol避免变量名冲突
+    const key = Symbol("key");
+    obj[key] = this;
+    // 调用obj[key]方法,fn里的this指向obj
+    let result = obj[key](...args);
+    // 删除obj[key]方法
+    delete obj[key]
     // 返回计算结果
     return result;
 }
-
 function add(a, b)
 {
     console.log(this);
@@ -33,5 +34,5 @@ function add(a, b)
 // 声明一个对象
 let obj = {name: "obj"};
 
-let result = call(add, obj, 1, 2);
+let result = add.myCall(obj, 1, 2);
 console.log(result);

@@ -1,12 +1,13 @@
-function apply(fn, obj, args)
+Function.prototype.myApply = function(obj, args)
 {
     if(!obj)
     {
         obj = globalThis;
     }
-    obj.temp = fn;
-    let result = obj.temp(...args);
-    delete obj.temp;
+    const key = Symbol("key");
+    obj[key] = this;
+    let result = obj[key](...args);
+    delete obj[key];
     return result;
 }
 
@@ -18,6 +19,5 @@ function add(a, b)
 
 // 声明一个对象
 let obj = {name: "obj"};
-
-let result = apply(add, obj, [2, 2]);
+let result = add.myApply(obj, [1, 2]);
 console.log(result);

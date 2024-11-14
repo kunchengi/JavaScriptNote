@@ -9,6 +9,26 @@
    cnpm i webpack webpack-cli
    ```
 3. 配置webpack.config.js
+    ```javascript
+    // 引入path模块
+    const path = require('path');
+    module.exports = {
+        // 模式
+        mode: 'development',// 或者用 production
+        // 入口文件
+        entry: './principle/index.js',
+        output: {
+            // 打包到当前目录下的dist文件夹下
+            path: path.resolve(__dirname, 'dist'),
+            // 打包后的文件名
+            filename: 'Kenson-utils.js',
+            // 向外暴露的对象名
+            library: 'kutils',
+            // 打包生成库可以通过esm/commonjs/reqirejs的语法引入
+            libraryTarget: 'umd'
+        }
+    };
+    ```
 4. 创建入口文件index.js
 5. 在package.json中的scripts中添加打包命令
    ```json
@@ -19,8 +39,21 @@
    npm run build:watch
    ```
 7. 将要导出的方法、类、变量都使用export关键字导出
-8. 在index.js中引入模块
-9. 在index.js中导出模块
+    ```javascript
+    export function add(a, b) {}
+    export class Person {}
+    ```
+8. 在index.js中引入并导出模块
+    ```javascript
+    export {newInstance} from '../principle/创建对象实例';
+    export {reverseString} from '../principle/翻转字符串';
+    export {throttle, debounce} from '../principle/函数节流和防抖';
+    export {palindrome} from '../principle/检测回文字符串';
+    export {truncate} from '../principle/截取字符串';
+    export {clone} from '../principle/浅拷贝';
+    export {pull, drop, dropRight} from '../principle/删除数组元素';
+    export {axios} from '../principle/axios';
+    ```
 10. 在package.json中修改：
     ```json
     "name": "kenson-utils" // 必须在npm平台上独一无二
