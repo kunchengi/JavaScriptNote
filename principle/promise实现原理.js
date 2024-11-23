@@ -10,8 +10,14 @@
  * 6. 实现执行器里面异步执行解决/拒绝函数和多次调用then方法的情况
  *      - 当状态为进行中，则将解决/拒绝函数添加到数组中
  *      - 解决函数和拒绝函数遍历数组并执行
- * 7. 
- *      
+ * 7. 编写runAsyncTask函数
+ *      - 使用queueMicrotask、MutationObserver、setTimeout实现异步
+ * 8. 执行解决、拒绝回调时使用runAsyncTask函数实现异步执行
+ * 9. 实现then方法链式调用
+ *      - 返回一个新的promise，实现链式调用
+ *      - 如果回调函数抛出异常，则执行新promise的reject方法
+ *      - 如果返回值为promise，则执行该promise的then方法，否则执行新promise的resolve方法
+ *      - 处理重复引用：如果返回值和当前promise是同一个对象，则抛出异常
  */
 
 class Promise1{
@@ -86,9 +92,9 @@ class Promise1{
         if(this.PromiseState === Promise1.PENDING){
             this.PromiseState = Promise1.FULFILLED;
             this.PromiseResult = value;
-            // 使用setTimeout将回调函数放入下一个宏任务中执行
+            // 使用runAsyncTaskt将回调函数放入任务列表中执行
             // 避免阻塞then后面的同步代码的执行，实现异步效果
-            setTimeout(() => {
+            this.runAsyncTask(() => {
                 // 遍历回调函数数组，执行所有解决回调
                 this.#callbacks.forEach((callback) => {
                     callback.onFulfilled(value);
@@ -113,15 +119,14 @@ class Promise1{
             }
             this.PromiseResult = reason;
         }
-        // 使用setTimeout将回调函数放入下一个宏任务中执行
+        // 使用runAsyncTaskt将回调函数放入任务列表中执行
         // 避免阻塞同步代码的执行，实现异步效果
-        setTimeout(() => {
+        this.runAsyncTask(() => {
             // 遍历回调函数数组，执行所有拒绝回调
             this.#callbacks.forEach((callback) => {
                 callback.onRejected(reason);
             }); 
         });
-
     }
 
     /**
@@ -167,9 +172,9 @@ class Promise1{
             }
             // 如果状态为解决状态，则执行解决回调
             if(this.PromiseState === Promise1.FULFILLED){
-                // 使用setTimeout将回调函数放入下一个宏任务中执行
+                // 使用runAsyncTaskt将回调函数放入任务列表中执行
                 // 避免阻塞同步代码的执行，实现异步效果
-                setTimeout(() => {
+                this.runAsyncTask(() => {
                     try{
                         this.parse(promise, onFulfilled(this.PromiseResult), resolve, reject);
                     }
@@ -180,7 +185,9 @@ class Promise1{
             }
             // 如果状态为拒绝状态，则执行拒绝回调
             if(this.PromiseState === Promise1.REJECTED){
-                setTimeout(() => {
+                // 使用runAsyncTaskt将回调函数放入任务列表中执行
+                // 避免阻塞同步代码的执行，实现异步效果
+                this.runAsyncTask(() => {
                     try{
                         this.parse(promise, onRejected(this.PromiseResult), resolve, reject);
                     }
@@ -205,7 +212,7 @@ class Promise1{
     parse(promise, result, resolve, reject){
         // 不允许返回当前promise
         // 如果promise和返回值相等，则抛出错误
-        if(promise == result)
+        if(promise === result)
         {
             throw new TypeError("Chaining cycle detected for promise");
         }
@@ -322,6 +329,35 @@ class Promise1{
     static catch(onRejected){
         return this.then(null, onRejected);
     }
+
+    /**
+    * @description 异步执行函数
+    * @param {Function} callback 回调函数
+    * @return void
+    * @status public
+    */
+    runAsyncTask(callback){
+        // 浏览器支持queueMicrotask方法，则使用它
+        if(typeof queueMicrotask === "function")
+        {
+            queueMicrotask(callback);
+        }
+        else if(typeof MutationObserver === "function")
+        {
+            // 浏览器支持MutationObserver，使用它
+            const observer = new MutationObserver(callback);
+            const divNode = document.createElement("div");
+            observer.observe(divNode, {
+                childList: true
+            });
+            divNode.innerText = "1";
+        }
+        else
+        {
+            // 浏览器不支持，使用setTimeout方法
+            setTimeout(callback, 0);
+        }
+    }
 }
 
 // 测试代码
@@ -339,17 +375,92 @@ class Promise1{
 // }, (reason) => {
 //     console.log(reason);
 // });
+/**
+ * 输出：
+ * Promise1
+ * 成功
+ */
 
-Promise1.reject(new Promise1((resolve, reject) => {
-    resolve("成功1");
-    // reject("失败1");
-})).then((value) => {
-    console.log("1");
-    console.log(value);
-}, (reason) => {
-    console.log("2");
-    console.log(reason);
-});
+// 测试异步执行
+// setTimeout(() => {
+//     console.log("宏任务");
+// }, 0);
+// let promise1 = new Promise1((resolve, reject) => {
+//     console.log("promise1");
+//     resolve("微任务");
+// });
+// promise1.then((value) => {
+//     console.log(value);
+// }, (reason) => {
+//     console.log(reason);
+// });
+// console.log("同步执行");
+/**
+ * 输出：
+ * promise1
+ * 同步执行
+ * 微任务
+ * 宏任务
+ */
+// setTimeout(() => {
+//     console.log("宏任务");
+// }, 0);
+// let promise1 = new Promise1((resolve, reject) => {
+//     console.log("promise1");
+//     setTimeout(() => {
+//         console.log("宏任务1");
+//         resolve("微任务");
+//     }, 0);
+
+// });
+// promise1.then((value) => {
+//     console.log(value);
+// }, (reason) => {
+//     console.log(reason);
+// });
+// console.log("同步执行");
+/**
+ * 输出：
+ * promise1
+ * 同步执行
+ * 宏任务
+ * 宏任务1
+ * 微任务
+ */
+
+// 执行reject会返回一个失败的Promise对象，原因为传入的参数
+// Promise1.reject(new Promise1((resolve, reject) => {
+//     resolve("成功1");
+// })).then((value) => {
+//     console.log("1");
+//     console.log(value);
+// }, (reason) => {
+//     console.log("2");
+//     console.log(reason);
+// });
+/**
+ * 输出：
+ * 2
+ * Promise1
+ */
+
+// // 测试重复引用
+// let promise1 = new Promise1((resolve, reject) => {
+//     resolve("成功");
+// });
+// let promise2 = promise1.then((value) => {
+//     return promise2;
+// });
+// promise2.then((value) => {
+//     console.log(value);
+// }, (reason) => {
+//     console.log(reason);
+// });
+// /**
+//  * 输出：
+//  * Chaining cycle detected for promise
+//  */
+
 
 // Promise1.reject(new Promise1((resolve, reject) => {
 //     resolve("成功");
@@ -359,19 +470,19 @@ Promise1.reject(new Promise1((resolve, reject) => {
 //     console.log(reason);
 // });
 
-function promiseFunc(res)
-{
-    return new Promise1((resolve, reject) => {
-        if(res.includes("失败"))
-        {
-            reject(res);
-        }
-        resolve(res);
-    });
-}
-let promiseArr = [promiseFunc("成功1"), promiseFunc("成功2"), promiseFunc("失败"), promiseFunc("成功3")];
-// Promise.allSettled方法
-// 返回所有promise的结果，不管成功还是失败
-Promise1.allSettled(promiseArr).then((res) => {
-    console.log(res);
-});
+// function promiseFunc(res)
+// {
+//     return new Promise1((resolve, reject) => {
+//         if(res.includes("失败"))
+//         {
+//             reject(res);
+//         }
+//         resolve(res);
+//     });
+// }
+// let promiseArr = [promiseFunc("成功1"), promiseFunc("成功2"), promiseFunc("失败"), promiseFunc("成功3")];
+// // Promise.allSettled方法
+// // 返回所有promise的结果，不管成功还是失败
+// Promise1.allSettled(promiseArr).then((res) => {
+//     console.log(res);
+// });

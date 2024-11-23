@@ -56,7 +56,7 @@
  * 8. resolve：返回一个成功的Promise对象。
  *      - 如果传入的是Promise对象，直接返回。
  *      - 如果传入的不是Promise对象，返回一个新的Promise对象，状态为resolved，值为传入的值。
- * 9. reject：返回一个失败的Promise对象。
+ * 9. reject：返回一个失败的Promise对象，原因为传入的参数
  * Promise的优缺点：
  * 优点：
  * 1. 可以将异步操作以同步操作的流程表达出来，避免了回调地狱。
