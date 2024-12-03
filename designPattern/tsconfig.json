@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+      "target": "ES2015",  // 或更高版本，如 "ES2017", "ES2018" 等
+      "lib": ["ES2015", "DOM"],  // 确保包含 "ES2015"
+      "module": "commonjs",
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true
+    },
+    "include": ["./**/*"]  // 根据你的项目结构调整路径
+  }
