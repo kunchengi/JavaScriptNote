@@ -5,35 +5,57 @@
  * 节流和防抖是解决这类问题的一种解决方案。
  * throttle节流：
  * 1、在函数执行一次后，之后大于设定的时间间隔后才能再次执行。
- * 2、适合多次时间按时间做平均分配触发，如窗口调整（resize）、页面滚动（scroll）、鼠标移动（mousemove）、抢购疯狂点击（click）等。
+ * 2、适合多次事件按时间做平均分配触发，如窗口调整（resize）、页面滚动（scroll）、鼠标移动（mousemove）、抢购疯狂点击（click）等。
  * 3、使用：throttle(fn, wait)
  * debounce防抖：
  * 1、在规定时间内，只让最后一次生效，前面的不生效，每次触发，都重新计时。
- * 2、适合多次时间一次响应的情况，如搜索框输入，提交表单等。
+ * 2、适合多次事件一次响应的情况，如搜索框输入，提交表单等。
  * 3、使用：debounce(fn, wait)
  */
 
 /**
- * @description 节流(在函数执行一次后，之后大于设定的时间间隔后才能再次执行。)
- * @param callback 回调函数
+ * @description 节流(使用时间戳)
+ * @param fn 需要节流的函数
  * @param wait 间隔时间
  * @return void
  * @status public
  */
-export function throttle(callback, wait)
+export function throttle(fn, wait = 0)
 {
     // 定义开始时间
     let startTime = 0;
     // 返回结果是一个函数，参数是事件对象
-    return function (event) {
+    return function (...args) {
         let curTime = Date.now();
         // 判断时间间隔
         if (curTime - startTime >= wait) {
             // 执行回调函数
-            callback.call(this, event);
+            fn.apply(this, ...args);
             // 更新开始时间
             startTime = curTime;
         }
+    }
+}
+
+/**
+* @description 节流2(使用setTimeout)
+* @param 
+* @return void
+* @status public
+*/
+function throttle2(fn, wait = 0) {
+    // 缓存一个定时器id
+    let timer = null;
+    // 返回结果是一个函数，参数是事件对象
+    return function (...args) {
+        // 已经有定时器，不执行
+        if(timer) return;
+        // 创建一个定时器，wait后执行回调函数
+        timer = setTimeout(() => {
+            fn.apply(this, args);
+            // 执行回调后清除定时器记录
+            timer = null;
+        },wait)
     }
 }
 
@@ -48,20 +70,21 @@ export function throttle(callback, wait)
 
 /**
  * @description 函数防抖
- * @param 
+ * @param {Function} fn 需要防抖的函数
+ * @param {Number} wait 延迟时间
  * @return void
  * @status public
  */
-export function debounce(callback, wait) {
+export function debounce(fn, wait = 0) {
     // 缓存一个定时器id
     let timer = null;
     // 返回结果是一个函数，参数是事件对象
-    return function (event) {
+    return function (...args) {
         // 清除之前的定时器，使用新的事件对象
         if(timer) clearTimeout(timer);
         // 创建一个定时器，wait后执行回调函数
         timer = setTimeout(() => {
-            callback.call(this, event);
+            fn.apply(this, args);
             // 执行回调后清除定时器
             timer = null;
         }, wait);
