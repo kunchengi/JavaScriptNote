@@ -12,22 +12,26 @@ export default class AJAX {
         method = method.toUpperCase();
         const xhr = new XMLHttpRequest();
         // 如果options不为空
-        if (options) {
+        if (options?.params) {
             // 初始化前缀
             let paramsStr = url.includes("?") ? "&" : "?";
             // 将options.params对象转换成?id=100&vip=7&
             for (let key in options.params) {
-                paramsStr += `${key}=${params[key]}&`;
+                paramsStr += `${key}=${options.params[key]}&`;
             }
             // 删除最后一个字符&
             paramsStr = paramsStr.slice(0, -1);
             url += paramsStr;
-            // 设置请求头
+        }
+        xhr.open(method, url);
+        // 设置请求头
+        if(options?.headers)
+        {
             for (let key in options.headers) {
                 xhr.setRequestHeader(key, options.headers[key]);
             }
         }
-        xhr.open(method, url);
+
         xhr.responseType = "json";
         return xhr;
     }
