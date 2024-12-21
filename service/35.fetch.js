@@ -1,8 +1,8 @@
 /**
- * fetch: 浏览器内置api，用于发送网络请求
- * AJAX: 基于XMLHttpRequest收发请求，使用较为繁琐
- * axios: 基于promise的请求客户端，在浏览器和node中均可使用，使用简便，功能强大
- * fetch: 基于promise，用法和axios类似，但更简单
+ * 由于xhr不符合关注分离的原则，所以新增了符合关注分离原则的fetch，用于替代XMLHttpRequest
+ * fetch: 浏览器内置api，不依赖于XMLHttpRequest，用法和axios类似，但更简单。不兼容旧版浏览器，开发一般不会使用。
+ * AJAX: 基于XMLHttpRequest封装，使用较为繁琐
+ * axios: 基于XMLHttpRequest封装，在浏览器和node中均可使用，使用简便，功能强大
  */
 async function fetchTest() {
     // 创建请求参数对象
